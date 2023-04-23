@@ -1,0 +1,43 @@
+from pygame import *
+back = (0,255,100)
+width = 700
+heigth = 500
+size = (width,heigth)
+ping_window = display.set_mode((size))
+clock = time.Clock()
+game = True
+ping_window.fill(back)
+class Area():
+    def init(self,x=0,y=0,width=10,height=10,color=None):
+        self.rect = Rect(x,y,width,height)
+        self.fill_color = back
+        if color:
+            self.fill_color = color
+    def color(self,new_color):
+        self.fill_color = new_color
+    def fill(self):
+        draw.rect(ping_window,self.fill_color,self.rect)
+    def outline(self,frame_color,thickness):
+        draw.rect(ping_window,frame_color,self.rect,thickness)
+    def collidepoint(self,x,y):
+        return self.rect.collidepoint(x,y)
+    def colliderect(self,rect):
+        return self.rect.colliderect(rect)
+class Picture(Area):
+    def init(self,picture,x=0,y=0,width=10,height=10,color=None):
+        super().init(x,y,width,height,color)
+        self.image = image.load(picture)
+    def draw(self):
+        ping_window.blit(self.image,(self.rect.x,self.rect.y))
+class Label(Area):
+    def set_text(self,text,fsize=12,text_color=(0,0,0)):
+        self.image = font.SysFont('verdana',fsize).render(text,True,text_color)
+    def draw(self,shift_x,shift_y):
+        self.fill()
+        ping_window.blit(self.image,(self.rect.x + shift_x,self.rect.y + shift_y))
+while game:
+        for e in event.get():
+            if e.type == QUIT:
+                game = False
+        display.update()
+        clock.tick(60)
